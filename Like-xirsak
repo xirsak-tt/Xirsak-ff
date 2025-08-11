@@ -1,0 +1,29 @@
+import os
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+
+# Токен аз муҳити сервер гирифта мешавад
+TOKEN = os.getenv("TOKEN")
+
+async def like_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if len(context.args) < 2:
+        await update.message.reply_text("❌ Истифода: /like <сервер> <айди>")
+        return
+    
+    server = context.args[0]
+    player_id = context.args[1]
+    
+    await update.message.reply_text(
+        f"👍 Лайк ба ID: {player_id} дар сервер {server} фиристода шуд!"
+    )
+
+async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Салом! Фармон навис: /like <сервер> <айди>")
+
+app = ApplicationBuilder().token(TOKEN).build()
+
+app.add_handler(CommandHandler("start", start_command))
+app.add_handler(CommandHandler("like", like_command))
+
+print("Бот кор мекунад...")
+app.run_polling()
